@@ -7,6 +7,7 @@
 import util
 PRINT = True
 
+
 class MiraClassifier:
     """
     Mira classifier.
@@ -14,7 +15,8 @@ class MiraClassifier:
     Note that the variable 'datum' in this code refers to a counter of features
     (not to a raw samples.Datum).
     """
-    def __init__( self, legalLabels, max_iterations):
+
+    def __init__(self, legalLabels, max_iterations):
         self.legalLabels = legalLabels
         self.type = "mira"
         self.automaticTuning = False
@@ -26,7 +28,8 @@ class MiraClassifier:
         "Resets the weights of each label to zero vectors"
         self.weights = {}
         for label in self.legalLabels:
-            self.weights[label] = util.Counter() # this is the data-structure you should use
+            # this is the data-structure you should use
+            self.weights[label] = util.Counter()
 
     def train(self, trainingData, trainingLabels, validationData, validationLabels):
         "Outside shell to call your method. Do not modify this method."
@@ -38,15 +41,10 @@ class MiraClassifier:
 
         return self.trainAndTune(trainingData, trainingLabels, validationData, validationLabels, Cgrid)
 
-    
-    
-    
     def trainAndTune(self, trainingData, trainingLabels, validationData, validationLabels, Cgrid):
-        
-       
+
         # DO NOT ZERO OUT YOUR WEIGHTS BEFORE STARTING TRAINING, OR
         # THE AUTOGRADER WILL LIKELY DEDUCT POINTS.
-        
 
         self.features = trainingData[0].keys()
 
@@ -54,28 +52,19 @@ class MiraClassifier:
         for c in Cgrid:
             self.weights = newWeights.copy()
             for iteration in range(self.max_iterations):
-                print ("Starting iteration ", iteration, "...")
-            
-                
-        
-        self.weights = bestWeight        
-              
-    
-    
-             
-    def classify(self, data ):
+                print("Starting iteration ", iteration, "...")
+
+        self.weights = bestWeight
+
+    def classify(self, data):
         """
         Classifies each datum as the label that most closely matches the prototype vector
         for that label.  See the project description for details.
 
         Recall that a datum is a util.counter...
         """
-       
+
         guesses = []
-        #for i in range(len(data)):
-
-
+        # for i in range(len(data)):
 
         return guesses
-
-
