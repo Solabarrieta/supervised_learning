@@ -70,14 +70,6 @@ class MiraClassifier:
                         tau = self.getTau(trueLabel, predictedLabel, datum, c)
                         self.updateWeights(
                             trueLabel, predictedLabel, datum, tau)
-        #             else:
-        #                 correct += 1
-        #     accuracy = correct / len(validationData)
-        #     if accuracy > bestAccuracy:
-        #         bestAccuracy = accuracy
-        #         bestWeight = self.weights
-
-        # self.weights = bestWeight
 
     def classify(self, data):
         """
