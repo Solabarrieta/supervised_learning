@@ -49,12 +49,35 @@ class MiraClassifier:
         self.features = trainingData[0].keys()
 
         newWeights = self.weights.copy()
+        bestAccuracy = 0
+        correct = 0
         for c in Cgrid:
+
             self.weights = newWeights.copy()
             for iteration in range(self.max_iterations):
+
                 print("Starting iteration ", iteration, "...")
 
-        self.weights = bestWeight
+                for datum, trueLabel in zip(trainingData, trainingLabels):
+                    scores = util.Counter()
+
+                    for label in self.legalLabels:
+                        scores[label] = self.weights[label] * datum
+
+                    predictedLabel = scores.argMax()
+
+                    if predictedLabel != trueLabel:
+                        tau = self.getTau(trueLabel, predictedLabel, datum, c)
+                        self.updateWeights(
+                            trueLabel, predictedLabel, datum, tau)
+        #             else:
+        #                 correct += 1
+        #     accuracy = correct / len(validationData)
+        #     if accuracy > bestAccuracy:
+        #         bestAccuracy = accuracy
+        #         bestWeight = self.weights
+
+        # self.weights = bestWeight
 
     def classify(self, data):
         """
@@ -65,6 +88,31 @@ class MiraClassifier:
         """
 
         guesses = []
-        # for i in range(len(data)):
-
+        for i in range(len(data)):
+            datum = data[i]
+            scores = util.Counter()
+            for label in self.legalLabels:
+                scores[label] = self.weights[label] * datum
+            predictedLabel = scores.argMax()
+            guesses.append(predictedLabel)
         return guesses
+
+    # Funciones auxiliares para hacer el código más legible.
+
+    def getTau(self, trueLabel, predictedLabel, datum, c):
+        denominador = 0
+        nominador = 0
+        substract = self.weights[trueLabel] - \
+            self.weights[predictedLabel]
+        for key, value in datum.items():
+            nominador += substract[key] * value
+            denominador += value**2
+
+        tau = min(c, (nominador + 1.0) / (denominador * 2.0))
+
+        return tau
+
+    def updateWeights(self, trueLabel, predictedLabel, datum, tau):
+        for key, value in datum.items():
+            self.weights[trueLabel][key] += tau * value
+            self.weights[predictedLabel][key] -= tau * value
